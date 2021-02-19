@@ -5,8 +5,9 @@ import {
   Image,
   StyleSheet,
   Button,
-  ScroolView,
+  ScrollView,
 } from "react-native";
+import { Colors } from "react-native/Libraries/NewAppScreen";
 import { useSelector } from "react-redux";
 
 const ProductDetailScreen = (props) => {
@@ -15,32 +16,15 @@ const ProductDetailScreen = (props) => {
     state.products.availableProducts.find((prod) => prod.id === productId)
   );
   return (
-    <View style={styles.product}>
-      <View style={styles.imageContainer}>
-        <Image
-          style={styles.image}
-          source={{ uri: selectedProduct.imageUrl }}
-        />
+    <ScrollView>
+      <Image style={styles.image} source={{ uri: selectedProduct.imageUrl }} />
+      <View style={styles.actions}>
+        <Button color={Colors.primary} title="Add To Cart" onPress={() => {}} />
       </View>
 
-      <View style={styles.detail}>
-        <Text style={styles.title}>{selectedProduct.title}</Text>
-        <Text style={styles.price}>${selectedProduct.price.toFixed(2)}</Text>
-      </View>
-
-      {/* <View style={styles.actions}>
-        <Button
-          color={Colors.primary}
-          title="View Details"
-          onPress={props.onViewDetail}
-        ></Button>
-        <Button
-          color={Colors.primary}
-          title="To Cart"
-          onPress={props.onAddToCart}
-        ></Button>
-      </View> */}
-    </View>
+      <Text style={styles.description}>{selectedProduct.description}</Text>
+      <Text style={styles.price}>${selectedProduct.price.toFixed(2)}</Text>
+    </ScrollView>
   );
 };
 
@@ -51,47 +35,24 @@ ProductDetailScreen.navigationOptions = (navData) => {
 };
 
 const styles = StyleSheet.create({
-  product: {
-    shadowColor: "black",
-    shadowOpacity: 0.26,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 8,
-    elevation: 5,
-    borderRadius: 10,
-    backgroundColor: "white",
-    height: 300,
-    margin: 20,
-  },
-  imageContainer: {
-    width: "100%",
-    height: "60%",
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    overflow: "hidden",
-  },
   image: {
     width: "100%",
-    height: "100%",
-  },
-  title: {
-    fontSize: 18,
-    marginVertical: 4,
+    height: 300,
   },
   price: {
-    fontSize: 14,
+    fontSize: 20,
     color: "#888",
+    textAlign: "center",
+    marginVertical: 10,
+  },
+  description: {
+    fontSize: 14,
+    textAlign: "center",
+    marginHorizontal: 20,
   },
   actions: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    marginVertical: 10,
     alignItems: "center",
-    height: "25%",
-    paddingHorizontal: 20,
-  },
-  detail: {
-    alignItems: "center",
-    height: "15%",
-    padding: 10,
   },
 });
 
