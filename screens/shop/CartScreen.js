@@ -50,6 +50,7 @@ const CartScreen = (props) => {
             quantity={itemData.item.quantity}
             amount={itemData.item.sum}
             title={itemData.item.productTitle}
+            deletable
             onRemove={() => {
               dispatch(CartActions.removeFromCart(itemData.item.productId));
             }}
