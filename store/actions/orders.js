@@ -1,9 +1,8 @@
-export const ADD_ORDERS = "ADD_ORDERS";
+export const ADD_ORDER = "ADD_ORDER";
 
 export const addOrder = (cartItems, totalAmount) => {
   return {
-    type: ADD_ORDERS,
+    type: ADD_ORDER,
     orderData: { items: cartItems, amount: totalAmount },
   };
 };
-s;
