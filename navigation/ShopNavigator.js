@@ -11,7 +11,7 @@ const ProductsNavigator = createStackNavigator(
   {
     ProductsOverview: ProductsOverviewScreen,
     ProductDetail: ProductDetailScreen,
-    CartScreen: CartScreen,
+    Cart: CartScreen,
   },
   {
     defaultNavigationOptions: {
