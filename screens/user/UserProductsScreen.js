@@ -1,48 +1,3 @@
-// import React from "react";
-// import { useSelector } from "react-redux";
-// import { FlatList, Platform } from "react-native";
-// import ProductItem from "../../components/shop/ProductItem";
-// import HeaderButton from "../../components/UI/HeaderButton";
-// import { HeaderButtons, Item } from "react-navigation-header-buttons";
-
-// const UserProductsScreen = (props) => {
-//   const userProducts = useSelector((state) => state.products.userProducts); //products refers to identifier in App.js,userProducts refers to identifier in produt reducer
-//   return (
-//     <FlatList
-//       data={userProducts}
-//       keyExtractor={(item) => item.id}
-//       renderItem={(itemData) => (
-//         <ProductItem
-//           image={itemData.item.imageUrl}
-//           title={itemData.item.title}
-//           price={itemData.item.price}
-//           onViewDetail={() => {}}
-//           onAddToCart={() => {}}
-//         />
-//       )}
-//     />
-//   );
-// };
-
-// UserProductsScreen.navigationOptions = (navData) => {
-//   return {
-//     headerTitle: "My Products",
-//     headerLeft: () => (
-//       <HeaderButtons HeaderButtonComponent={HeaderButton}>
-//         <Item
-//           title="Menu"
-//           iconName={Platform.OS === "android" ? "md-menu" : "ios-menu"}
-//           onPress={() => {
-//             navData.navigation.toggleDrawer();
-//           }}
-//         />
-//       </HeaderButtons>
-//     ),
-//   };
-// };
-
-// export default UserProductsScreen;
-
 import React from "react";
 import { FlatList, Button, Platform } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
@@ -57,6 +12,10 @@ const UserProductsScreen = (props) => {
   const userProducts = useSelector((state) => state.products.userProducts);
   const dispatch = useDispatch();
 
+  const editProductHandler = (id) => {
+    props.navigation.navigate("EditProduct", { productId: id });
+  };
+
   return (
     <FlatList
       data={userProducts}
@@ -66,9 +25,17 @@ const UserProductsScreen = (props) => {
           image={itemData.item.imageUrl}
           title={itemData.item.title}
           price={itemData.item.price}
-          onSelect={() => {}}
+          onSelect={() => {
+            editProductHandler(itemData.item.id);
+          }}
         >
-          <Button color={Colors.primary} title="Edit" onPress={() => {}} />
+          <Button
+            color={Colors.primary}
+            title="Edit"
+            onPress={() => {
+              editProductHandler(itemData.item.id);
+            }}
+          />
           <Button
             color={Colors.primary}
             title="Delete"
