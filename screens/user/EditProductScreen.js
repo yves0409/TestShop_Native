@@ -6,6 +6,7 @@ import {
   TextInput,
   ScrollView,
   Platform,
+  Alert,
 } from "react-native";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButton from "../../components/UI/HeaderButton";
@@ -19,6 +20,9 @@ const EditProductScreen = (props) => {
   );
 
   const [title, setTitle] = useState(editedProduct ? editedProduct.title : "");
+  const [titleIsValid, setTitleIsValid] = useState(false);
+  const [descriptionIsValid, setDescriptionIsValid] = useState(false);
+  const [priceIsValid, setPriceIsValid] = useState(false);
   const [imageUrl, setImageUrl] = useState(
     editedProduct ? editedProduct.imageUrl : ""
   );
@@ -30,6 +34,11 @@ const EditProductScreen = (props) => {
   const dispatch = useDispatch();
 
   const submitHandler = useCallback(() => {
+    if (!titleIsValid) {
+      Alert.alert("Invalid title", "Please enter a title!", [{ text: "OK" }]);
+      return;
+    }
+
     if (editedProduct) {
       dispatch(
         productsActions.updateProduct(prodId, title, description, imageUrl)
@@ -46,6 +55,24 @@ const EditProductScreen = (props) => {
     props.navigation.setParams({ submit: submitHandler });
   }, [submitHandler]);
 
+  const titleChangeHandler = (text) => {
+    if (text.trim().length === 0) {
+      setTitleIsValid(false);
+    } else {
+      setTitleIsValid(true);
+    }
+    setTitle();
+  };
+
+  const descriptionChangeHandler = (description) => {
+    if (description.trim().length === 0) {
+      setDescriptionIsValid(false);
+    } else {
+      setDescriptionIsValid(true);
+    }
+    setDescription();
+  };
+
   return (
     <ScrollView>
       <View style={styles.form}>
@@ -54,10 +81,11 @@ const EditProductScreen = (props) => {
           <TextInput
             style={styles.input}
             value={title}
-            onChangeText={(text) => setTitle(text)}
+            onChangeText={titleChangeHandler}
             keyboardType="default"
             autoCapitalize="sentences"
-          ></TextInput>
+          />
+          {!titleIsValid && <Text>Please enter a title!</Text>}
         </View>
         <View style={styles.formControl}>
           <Text style={styles.label}>Image Url</Text>
@@ -84,9 +112,10 @@ const EditProductScreen = (props) => {
           <TextInput
             style={styles.input}
             value={description}
-            onChangeText={(text) => setDescription(text)}
+            onChangeText={descriptionChangeHandler}
             returnKeyType="go"
-          ></TextInput>
+          />
+          {!descriptionIsValid && <Text>Please enter a description!</Text>}
         </View>
       </View>
     </ScrollView>
