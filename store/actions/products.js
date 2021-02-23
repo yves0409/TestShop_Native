@@ -38,13 +38,23 @@ export const fetchProducts = () => {
   };
 };
 
+//DELETE
 export const deleteProduct = (productId) => {
-  return {
-    type: DELETE_PRODUCT,
-    pid: productId,
+  return async (dispatch) => {
+    await fetch(
+      `https://native-shop-8ca66-default-rtdb.firebaseio.com/products/${productId}.json`,
+      {
+        method: "DELETE",
+      }
+    );
+    dispatch({
+      type: DELETE_PRODUCT,
+      pid: productId,
+    });
   };
 };
 
+//CREATE
 export const createProduct = (title, description, imageUrl, price) => {
   return async (dispatch) => {
     const response = await fetch(
@@ -80,6 +90,7 @@ export const createProduct = (title, description, imageUrl, price) => {
   };
 };
 
+//UPDATE
 export const updateProduct = (id, title, description, imageUrl) => {
   return async (dispatch) => {
     await fetch(
