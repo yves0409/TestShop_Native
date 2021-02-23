@@ -34,6 +34,17 @@ const ProductsOverviewScreen = (props) => {
     setIsLoading(false);
   }, [dispatch, setIsLoading, setError]);
 
+  //NavigationListener,will rerender when the screen is reopened
+  useEffect(() => {
+    const willFocusSub = props.navigation.addListener(
+      "willFocus",
+      loadProducts
+    );
+    return () => {
+      willFocusSub.remove();
+    };
+  }, [loadProducts]);
+
   //dispatching the fetched products and setting spinner(activityIndicator)
   useEffect(() => {
     loadProducts();
