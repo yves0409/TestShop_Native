@@ -41,12 +41,17 @@ export const fetchProducts = () => {
 //DELETE
 export const deleteProduct = (productId) => {
   return async (dispatch) => {
-    await fetch(
+    const response = await fetch(
       `https://native-shop-8ca66-default-rtdb.firebaseio.com/products/${productId}.json`,
       {
         method: "DELETE",
       }
     );
+
+    if (!response.ok) {
+      throw new Error("Something went wrong!");
+    }
+
     dispatch({
       type: DELETE_PRODUCT,
       pid: productId,
@@ -93,7 +98,7 @@ export const createProduct = (title, description, imageUrl, price) => {
 //UPDATE
 export const updateProduct = (id, title, description, imageUrl) => {
   return async (dispatch) => {
-    await fetch(
+    const response = await fetch(
       `https://native-shop-8ca66-default-rtdb.firebaseio.com/products/${id}.json`,
       {
         method: "PATCH",
@@ -107,6 +112,10 @@ export const updateProduct = (id, title, description, imageUrl) => {
         }),
       }
     );
+
+    if (!response.ok) {
+      throw new Error("Something went wrong!");
+    }
     dispatch({
       type: UPDATE_PRODUCT,
       pid: id,
