@@ -1,4 +1,38 @@
+import Order from "../../models/order";
+
 export const ADD_ORDER = "ADD_ORDER";
+export const SET_ORDERS = "SET_ORDERS";
+
+export const fetchOrders = () => {
+  return async (dispatch) => {
+    try {
+      const response = await fetch(
+        "https://native-shop-8ca66-default-rtdb.firebaseio.com/orders/u1.json"
+      );
+      //error
+      if (!response.ok) {
+        throw new Error("Oops! something went wrong...");
+      }
+      //response
+      const resData = await response.json();
+      const loadedOrders = [];
+      //loop through the loadedProducts array
+      for (const key in resData) {
+        loadedOrders.push(
+          new Order(
+            key,
+            resData[key].cartItems,
+            resData[key].totalAmount,
+            new Date(resData[key].date)
+          )
+        );
+      }
+      dispatch({ type: SET_ORDERS, orders: loadedOrders });
+    } catch (error) {
+      throw error;
+    }
+  };
+};
 
 export const addOrder = (cartItems, totalAmount) => {
   return async (dispatch) => {
@@ -26,7 +60,7 @@ export const addOrder = (cartItems, totalAmount) => {
     dispatch({
       type: ADD_ORDER,
       orderData: {
-        id: resDate.name,
+        id: resData.name,
         items: cartItems,
         amount: totalAmount,
         date: date,

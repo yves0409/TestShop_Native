@@ -16,7 +16,6 @@ import * as ordersActions from "../../store/actions/orders";
 
 const CartScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState();
 
   const cartTotalAmount = useSelector((state) => state.cart.totalAmount);
   const cartItems = useSelector((state) => {
