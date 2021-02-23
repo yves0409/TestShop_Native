@@ -6,26 +6,34 @@ import Product from "../../models/product";
 
 export const fetchProducts = () => {
   return async (dispatch) => {
-    const response = await fetch(
-      "https://native-shop-8ca66-default-rtdb.firebaseio.com/products.json"
-    );
-
-    const resData = await response.json();
-    const loadedProducts = [];
-
-    for (const key in resData) {
-      loadedProducts.push(
-        new Product(
-          key,
-          "u1",
-          resData[key].title,
-          resData[key].imageUrl,
-          resData[key].description,
-          resData[key].price
-        )
+    try {
+      const response = await fetch(
+        "https://native-shop-8ca66-default-rtdb.firebaseio.com/products.json"
       );
+      //error
+      if (!response.ok) {
+        throw new Error("Oops! something went wrong...");
+      }
+      //response
+      const resData = await response.json();
+      const loadedProducts = [];
+      //loop through the loadedProducts array
+      for (const key in resData) {
+        loadedProducts.push(
+          new Product(
+            key,
+            "u1",
+            resData[key].title,
+            resData[key].imageUrl,
+            resData[key].description,
+            resData[key].price
+          )
+        );
+      }
+      dispatch({ type: SET_PRODUCTS, products: loadedProducts });
+    } catch (error) {
+      throw error;
     }
-    dispatch({ type: SET_PRODUCTS, products: loadedProducts });
   };
 };
 
