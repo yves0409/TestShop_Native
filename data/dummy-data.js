@@ -49,6 +49,14 @@ const PRODUCTS = [
     "Can be used for role-playing (not the kind of role-playing you're thinking about...).",
     5.49
   ),
+  new Product(
+    "p7",
+    "u1",
+    "Mercedes CLA",
+    "https://res.cloudinary.com/yves/image/upload/v1611694111/h7pwqiga8a114osbxoer.jpg",
+    "Mercedes CLA in very good condition",
+    16500
+  ),
 ];
 
 export default PRODUCTS;
