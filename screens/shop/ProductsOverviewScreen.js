@@ -18,6 +18,7 @@ import Colors from "../../constants/Colors";
 
 const ProductsOverviewScreen = (props) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isRefresching, setIsRefreshing] = useState(false);
   const [error, setError] = useState();
   const products = useSelector((state) => state.products.availableProducts);
   const dispatch = useDispatch();
@@ -25,13 +26,14 @@ const ProductsOverviewScreen = (props) => {
   //Feching the products
   const loadProducts = useCallback(async () => {
     setError(null);
-    setIsLoading(true);
+    setIsRefreshing(true);
+
     try {
       await dispatch(productActions.fetchProducts());
     } catch (error) {
       setError(error.message);
     }
-    setIsLoading(false);
+    setIsRefreshing(false);
   }, [dispatch, setIsLoading, setError]);
 
   //NavigationListener,will rerender when the screen is reopened
@@ -47,7 +49,10 @@ const ProductsOverviewScreen = (props) => {
 
   //dispatching the fetched products and setting spinner(activityIndicator)
   useEffect(() => {
-    loadProducts();
+    setIsLoading(true);
+    loadProducts().then(() => {
+      setIsLoading(false);
+    });
   }, [dispatch, loadProducts]);
 
   //View product details handler
@@ -92,6 +97,8 @@ const ProductsOverviewScreen = (props) => {
 
   return (
     <FlatList
+      onRefresh={loadProducts}
+      refreshing={isRefresching}
       data={products}
       renderItem={(itemData) => (
         <ProductItem
