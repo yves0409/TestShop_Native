@@ -5,6 +5,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Button,
+  ActivityIndicator,
 } from "react-native";
 
 import Card from "../../components/UI/Card";
@@ -41,6 +42,8 @@ const formReducer = (state, action) => {
 
 const AuthScreen = (props) => {
   const [isSignup, setIsSignup] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const dispatch = useDispatch();
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
@@ -54,21 +57,25 @@ const AuthScreen = (props) => {
     },
     formIsValid: false,
   });
-  const authHandler = () => {
+  const authHandler = async () => {
     if (isSignup) {
+      setIsLoading(true);
       dispatch(
         authActions.signup(
           formState.inputValues.email,
           formState.inputValues.password
         )
       );
+      setIsLoading(false);
     } else {
+      setIsLoading(true);
       dispatch(
         authActions.login(
           formState.inputValues.email,
           formState.inputValues.password
         )
       );
+      setIsLoading(false);
     }
   };
 
@@ -117,11 +124,15 @@ const AuthScreen = (props) => {
               initialValue=""
             />
             <View style={styles.buttonContainer}>
-              <Button
-                title={isSignup ? "Sign Up" : "Login"}
-                color={Colors.primary}
-                onPress={authHandler}
-              />
+              {isLoading ? (
+                <ActivityIndicator size="small" color={Colors.primary} />
+              ) : (
+                <Button
+                  title={isSignup ? "Sign Up" : "Login"}
+                  color={Colors.primary}
+                  onPress={authHandler}
+                />
+              )}
             </View>
             <View style={styles.buttonContainer}>
               <Button
