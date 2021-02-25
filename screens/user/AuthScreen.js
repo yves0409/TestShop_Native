@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useCallback } from "react";
+import React, { useState, useReducer, useCallback, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Button,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 
 import Card from "../../components/UI/Card";
@@ -41,9 +42,9 @@ const formReducer = (state, action) => {
 };
 
 const AuthScreen = (props) => {
-  const [isSignup, setIsSignup] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [error, setError] = useState();
+  const [isSignup, setIsSignup] = useState(false);
   const dispatch = useDispatch();
 
   const [formState, dispatchFormState] = useReducer(formReducer, {
@@ -57,26 +58,35 @@ const AuthScreen = (props) => {
     },
     formIsValid: false,
   });
-  const authHandler = async () => {
-    if (isSignup) {
-      setIsLoading(true);
-      dispatch(
-        authActions.signup(
-          formState.inputValues.email,
-          formState.inputValues.password
-        )
-      );
-      setIsLoading(false);
-    } else {
-      setIsLoading(true);
-      dispatch(
-        authActions.login(
-          formState.inputValues.email,
-          formState.inputValues.password
-        )
-      );
-      setIsLoading(false);
+
+  useEffect(() => {
+    if (error) {
+      Alert.alert("An error occured", error, [{ text: "OK" }]);
     }
+  }, [error]);
+
+  const authHandler = async () => {
+    let action;
+    if (isSignup) {
+      action = authActions.signup(
+        formState.inputValues.email,
+        formState.inputValues.password
+      );
+    } else {
+      action = authActions.login(
+        formState.inputValues.email,
+        formState.inputValues.password
+      );
+    }
+    setError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(action);
+    } catch (error) {
+      setError(error.message);
+    }
+
+    setIsLoading(false);
   };
 
   const inputChangeHandler = useCallback(

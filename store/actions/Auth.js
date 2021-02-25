@@ -21,8 +21,16 @@ export const signup = (email, password) => {
     );
 
     if (!response.ok) {
-      throw new Error("Oops!,Something went wrong...");
+      const errorResData = await response.json();
+      const errorId = errorResData.error.message;
+      let message = "Oops!, Something went wrong"; //default message
+
+      if (errorId === "EMAIL_EXCISTS") {
+        message = "Email Already Excists";
+      }
+      throw new Error(message);
     }
+
     const resData = await response.json();
     console.log(resData);
     dispatch({ type: SIGNUP });
@@ -48,7 +56,17 @@ export const login = (email, password) => {
     );
 
     if (!response.ok) {
-      throw new Error("Oops!,Something went wrong...");
+      const errorResData = await response.json();
+      const errorId = errorResData.error.message;
+      let message = "Oops!, Something went wrong"; //default message
+
+      if (errorId === "EMAIL_NOT_FOUND") {
+        message = "Email Not Found";
+      }
+      if (errorId === "INVALID_PASSWORD") {
+        message = "Incorrect Password";
+      }
+      throw new Error(message);
     }
     const resData = await response.json();
     console.log(resData);
