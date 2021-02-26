@@ -40,9 +40,10 @@ export const fetchProducts = () => {
 
 //DELETE
 export const deleteProduct = (productId) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token; //from redux store
     const response = await fetch(
-      `https://native-shop-8ca66-default-rtdb.firebaseio.com/products/${productId}.json`,
+      `https://native-shop-8ca66-default-rtdb.firebaseio.com/products/${productId}.json?auth=${token}`,
       {
         method: "DELETE",
       }
@@ -61,9 +62,10 @@ export const deleteProduct = (productId) => {
 
 //CREATE
 export const createProduct = (title, description, imageUrl, price) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token; //from redux store
     const response = await fetch(
-      "https://native-shop-8ca66-default-rtdb.firebaseio.com/products.json",
+      `https://native-shop-8ca66-default-rtdb.firebaseio.com/products.json?auth=${token}`,
       {
         method: "POST",
         header: {
@@ -95,11 +97,12 @@ export const createProduct = (title, description, imageUrl, price) => {
   };
 };
 
-//UPDATE
+//UPDATE (THUNK allows us to use "getState" as an argument and get access to the full redux state ,thus also token)
 export const updateProduct = (id, title, description, imageUrl) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token; //from redux store
     const response = await fetch(
-      `https://native-shop-8ca66-default-rtdb.firebaseio.com/products/${id}.json`,
+      `https://native-shop-8ca66-default-rtdb.firebaseio.com/products/${id}.json?auth=${token}`,
       {
         method: "PATCH",
         header: {

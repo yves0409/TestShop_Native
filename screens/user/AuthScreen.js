@@ -14,7 +14,7 @@ import Input from "../../components/UI/Input";
 import Colors from "../../constants/Colors";
 import { LinearGradient } from "expo-linear-gradient";
 import { useDispatch } from "react-redux";
-import * as authActions from "../../store/actions/Auth";
+import * as authActions from "../../store/actions/auth";
 
 const FORM_INPUT_UPDATE = "FORM_INPUT_UPDATE";
 
