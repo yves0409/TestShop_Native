@@ -31,6 +31,15 @@ const OrdersScreen = (props) => {
       <ActivityIndicator size="large" color={Colors.primary} />
     </View>;
   }
+
+  if (orders.length === 0) {
+    return (
+      <View style={styles.centered}>
+        <Text>No Products Found</Text>
+      </View>
+    );
+  }
+
   return (
     <FlatList
       data={orders}
