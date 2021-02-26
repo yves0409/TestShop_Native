@@ -24,7 +24,7 @@ export const fetchProducts = () => {
         loadedProducts.push(
           new Product(
             key,
-            "u1",
+            resData[key].ownedId,
             resData[key].title,
             resData[key].imageUrl,
             resData[key].description,
@@ -35,7 +35,7 @@ export const fetchProducts = () => {
       dispatch({
         type: SET_PRODUCTS,
         products: loadedProducts,
-        userProducts: loadedProducts.filter((prod) => prod.ownerId === userId),
+        userProducts: loadedProducts.filter((prod) => prod.ownedId === userId),
       });
     } catch (error) {
       throw error;
@@ -82,7 +82,7 @@ export const createProduct = (title, description, imageUrl, price) => {
           description,
           imageUrl,
           price,
-          ownerId: userId,
+          ownedId: userId,
         }),
       }
     );
@@ -99,7 +99,7 @@ export const createProduct = (title, description, imageUrl, price) => {
         description,
         imageUrl,
         price,
-        ownerId: userId,
+        ownedId: userId,
       },
     });
   };

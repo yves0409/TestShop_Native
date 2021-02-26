@@ -35,7 +35,7 @@ const OrdersScreen = (props) => {
   if (orders.length === 0) {
     return (
       <View style={styles.centered}>
-        <Text>No Products Found</Text>
+        <Text>No Orders Found</Text>
       </View>
     );
   }

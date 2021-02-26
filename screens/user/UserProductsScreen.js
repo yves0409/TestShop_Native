@@ -36,7 +36,7 @@ const UserProductsScreen = (props) => {
       },
     ]);
   };
-
+  console.log(userProducts);
   if (userProducts.length === 0) {
     return (
       <View style={styles.emptyScreen}>
