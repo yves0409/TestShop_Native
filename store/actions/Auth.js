@@ -1,6 +1,7 @@
 // export const SIGNUP = "SIGNUP";
 // export const LOGIN = "LOGIN";
 export const AUTHENTICATE = "AUTHENTICATE";
+export const LOGOUT = "LOGOUT";
 const { API_KEY } = require("../../keys");
 import AsyncStorage from "@react-native-community/async-storage";
 
@@ -46,6 +47,11 @@ export const signup = (email, password) => {
     );
     saveDataToStorage(resData.idToken, resData.localId, expirationDate);
   };
+};
+
+//LOGOUT
+export const logout = () => {
+  return { type: LOGOUT };
 };
 
 const saveDataToStorage = (token, userId, expirationDate) => {
