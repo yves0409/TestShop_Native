@@ -5,9 +5,14 @@ export const LOGOUT = "LOGOUT";
 const { API_KEY } = require("../../keys");
 import AsyncStorage from "@react-native-community/async-storage";
 
+let timer;
+
 //AUTHENTICATE
-export const authenticate = (userId, token) => {
-  return { type: AUTHENTICATE, userId: userId, token: token };
+export const authenticate = (userId, token, expiryTime) => {
+  return (dispatch) => {
+    dispatch(setLogoutTimer(expiryTime));
+    dispatch({ type: AUTHENTICATE, userId: userId, token: token });
+  };
 };
 
 //SIGNUP
@@ -41,28 +46,18 @@ export const signup = (email, password) => {
 
     const resData = await response.json();
     console.log(resData);
-    dispatch(authenticate(resData.localId, resData.idToken));
+    dispatch(
+      authenticate(
+        resData.localId,
+        resData.idToken,
+        parseInt(resData.expiresIn) * 1000
+      )
+    );
     const expirationDate = new Date(
       new Date().getTime() + parseInt(resData.expiresIn) * 1000
     );
     saveDataToStorage(resData.idToken, resData.localId, expirationDate);
   };
-};
-
-//LOGOUT
-export const logout = () => {
-  return { type: LOGOUT };
-};
-
-const saveDataToStorage = (token, userId, expirationDate) => {
-  AsyncStorage.setItem(
-    "userData",
-    JSON.stringify({
-      token: token,
-      userId: userId,
-      expiryDate: expirationDate.toISOString(),
-    })
-  );
 };
 
 //LOGIN
@@ -90,18 +85,56 @@ export const login = (email, password) => {
 
       if (errorId === "EMAIL_NOT_FOUND") {
         message = "Email Not Found";
-      }
-      if (errorId === "INVALID_PASSWORD") {
+      } else if (errorId === "INVALID_PASSWORD") {
         message = "Incorrect Password";
       }
       throw new Error(message);
     }
     const resData = await response.json();
     console.log(resData);
-    dispatch(authenticate(resData.localId, resData.idToken));
+    dispatch(
+      authenticate(
+        resData.localId,
+        resData.idToken,
+        parseInt(resData.expiresIn) * 1000
+      )
+    );
     const expirationDate = new Date(
       new Date().getTime() + parseInt(resData.expiresIn) * 1000
     );
     saveDataToStorage(resData.idToken, resData.localId, expirationDate);
   };
+};
+
+//LOGOUT
+export const logout = () => {
+  clearLogoutTimer();
+  AsyncStorage.removeItem("userData");
+  return { type: LOGOUT };
+};
+
+//Auto logout when token expires
+const clearLogoutTimer = () => {
+  if (timer) {
+    clearTimeout(timer);
+  }
+};
+
+export const setLogoutTimer = (expirationTime) => {
+  return (dispatch) => {
+    timer = setTimeout(() => {
+      dispatch(logout());
+    }, expirationTime);
+  };
+};
+
+const saveDataToStorage = (token, userId, expirationDate) => {
+  AsyncStorage.setItem(
+    "userData",
+    JSON.stringify({
+      token: token,
+      userId: userId,
+      expiryDate: expirationDate.toISOString(),
+    })
+  );
 };
